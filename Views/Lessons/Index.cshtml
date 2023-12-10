@@ -1,0 +1,63 @@
+﻿@model LessonIndexViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Lessen</h1>
+
+<p>
+    <a asp-action="Create">Maak een nieuwe les aan</a>
+</p>
+
+<form asp-controller="Lessons" asp-action="Index" method="get">
+    <h4>
+        <select asp-for="SelectedType" asp-items="Model.TypeList" onchange="this.form.submit()">
+            <option value="Alle">Alle Lessen</option>
+
+        </select>
+        </h4>
+</form>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayName("Naam")
+            </th>
+            <th>
+                @Html.DisplayName("Beschrijving")
+            </th>
+            <th>
+                @Html.DisplayName("Type")
+            </th>
+            <th>
+                @Html.DisplayName("Groep")
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Lessons) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type)
+            </td>
+             <td>
+                    @Html.DisplayFor(modelItem => item.Group.Name)
+             </td>
+            <td>
+
+                <a asp-action="Edit" asp-route-id="@item.Id">Bijwerken</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Verwijderen</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

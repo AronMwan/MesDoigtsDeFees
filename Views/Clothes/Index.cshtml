@@ -1,0 +1,56 @@
+﻿@model MesDoigtsDeFees.Models.ClothesIndexViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Kledingstukken</h1>
+<p>
+    <a asp-action="Create">Maak een nieuw kledingstuk aan</a>
+</p>
+<form asp-controller="Clothes" asp-action="Index" method="get">
+    <h4>
+        <select asp-for="SelectedSize" asp-items="Model.SizeList" onchange="this.form.submit()">
+            <option value="Alle">Kies Maat</option>
+        </select>
+
+    </h4>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayName("Naam")
+            </th>
+            <th>
+                @Html.DisplayName("Beschrijving")
+            </th>
+            <th>
+                @Html.DisplayName("Maat")
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Clothes)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Size)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Bijwerken</a>
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id">Verwijderen</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

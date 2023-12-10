@@ -1,0 +1,40 @@
+﻿@model MesDoigtsDeFees.Models.LessonRichting
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Traject aanmaken</h1>
+
+<h4>Traject</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+
+        <form asp-action="Create">
+            <div class="form-group">
+                <label asp-for="LessonId" class="control-label">Les</label>
+                <select asp-for="LessonId" class="form-control" asp-items="ViewBag.LessonId"></select>
+                <span asp-validation-for="LessonId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="RichtingId" class="control-label">Richting</label>
+                <select asp-for="RichtingId" class="form-control" asp-items="ViewBag.RichtingId"></select>
+                <span asp-validation-for="RichtingId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Terug naar lijst</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
