@@ -25,6 +25,10 @@ namespace MesDoigtsDeFees.Controllers
         // GET: Lessons/Details/5
         public async Task<IActionResult> Index(string selectedType = "Alle")
         {
+
+            List<ListItem> groupList = _context.Groups
+                    .Select(g => new ListItem() { Text = g.Name, Value = g.Name })
+                    .ToList();
             List<ListItem> list = new List<ListItem>()
         {
             new ListItem() { Text = "Theorie", Value = "Theorie" },
@@ -40,6 +44,7 @@ namespace MesDoigtsDeFees.Controllers
                 viewModel.Lessons = await _context.Lessons
                     .OrderBy(l => l.Name)
                     .Include(l => l.Group)
+                    .Where(l => l.Ended == DateTime.MaxValue)
                     .ToListAsync();
                 return View(viewModel);
             }
@@ -48,11 +53,14 @@ namespace MesDoigtsDeFees.Controllers
                 LessonIndexViewModel viewModel2 = new LessonIndexViewModel
                 {
                     SelectedType = selectedType,
+
                     Lessons = await _context.Lessons
                         .Where(l => selectedType == "" || l.Type == selectedType)
                         .Include(l => l.Group)
+                        .Where(l => l.Ended == DateTime.MaxValue)
                         .OrderBy(l => l.Name)
                         .ToListAsync()
+
                 };
 
                 return View(viewModel2);
@@ -82,6 +90,12 @@ namespace MesDoigtsDeFees.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Controleer of de opgegeven RichtingId geldig is
+                if (lesson.RichtingId.HasValue && !_context.Richtings.Any(r => r.Id == lesson.RichtingId))
+                {
+                    ModelState.AddModelError("RichtingId", "Ongeldige RichtingId");
+                    return View(lesson);
+                }
                 _context.Add(lesson);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

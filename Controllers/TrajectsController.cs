@@ -23,7 +23,9 @@ namespace MesDoigtsDeFees.Controllers
         public async Task<IActionResult> Index()
         {
               return _context.Richtings != null ? 
-                          View(await _context.Richtings.ToListAsync()) :
+                          View(await _context.Richtings
+                          .Where(t => t.Ended == DateTime.MaxValue)
+                          .ToListAsync()) :
                           Problem("Entity set 'MesDoigtsDeFeesContext.Traject'  is null.");
         }
 
@@ -148,7 +150,8 @@ namespace MesDoigtsDeFees.Controllers
             var traject = await _context.Richtings.FindAsync(id);
             if (traject != null)
             {
-                _context.Richtings.Remove(traject);
+                traject.Ended = DateTime.Now;
+                _context.Richtings.Update(traject);
             }
             
             await _context.SaveChangesAsync();

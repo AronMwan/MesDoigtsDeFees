@@ -6,9 +6,13 @@
 
 <h1>Lessen</h1>
 
-<p>
-    <a asp-action="Create">Maak een nieuwe les aan</a>
-</p>
+@if(User.IsInRole("SystemAdministrator"))
+{
+    <p>
+        <a asp-action="Create">Maak een nieuwe les aan</a>
+    </p>
+}
+
 
 <form asp-controller="Lessons" asp-action="Index" method="get">
     <h4>
@@ -53,9 +57,13 @@
              </td>
             <td>
 
-                <a asp-action="Edit" asp-route-id="@item.Id">Bijwerken</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Verwijderen</a>
+                    @if (User.IsInRole("SystemAdministrator"))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id">Bijwerken</a>
+                    
+                    <a asp-action = "Details" asp-route-id="@item.Id"> Details</a> 
+                    <a asp-action = "Delete" asp-route-id = "@item.Id" > Verwijderen </a >
+                    }
             </td>
         </tr>
 }

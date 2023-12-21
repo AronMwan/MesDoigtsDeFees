@@ -4,6 +4,7 @@ using MesDoigtsDeFees.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MesDoigtsDeFees.Migrations
 {
     [DbContext(typeof(MyDBContext))]
-    partial class MesDoigtsDeFeesContextModelSnapshot : ModelSnapshot
+    [Migration("20231218151014_UpdateLesson")]
+    partial class UpdateLesson
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -123,7 +126,7 @@ namespace MesDoigtsDeFees.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Clothes", (string)null);
+                    b.ToTable("Clothes");
                 });
 
             modelBuilder.Entity("MesDoigtsDeFees.Models.Group", b =>
@@ -154,7 +157,7 @@ namespace MesDoigtsDeFees.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Groups", (string)null);
+                    b.ToTable("Groups");
                 });
 
             modelBuilder.Entity("MesDoigtsDeFees.Models.Lesson", b =>
@@ -179,7 +182,7 @@ namespace MesDoigtsDeFees.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("RichtingId")
+                    b.Property<int>("RichtingId")
                         .HasColumnType("int");
 
                     b.Property<string>("RichtingName")
@@ -198,7 +201,7 @@ namespace MesDoigtsDeFees.Migrations
 
                     b.HasIndex("RichtingId");
 
-                    b.ToTable("Lessons", (string)null);
+                    b.ToTable("Lessons");
                 });
 
             modelBuilder.Entity("MesDoigtsDeFees.Models.LessonRichting", b =>
@@ -235,7 +238,7 @@ namespace MesDoigtsDeFees.Migrations
 
                     b.HasIndex("RichtingId");
 
-                    b.ToTable("LessonRichtings", (string)null);
+                    b.ToTable("LessonRichtings");
                 });
 
             modelBuilder.Entity("MesDoigtsDeFees.Models.Richting", b =>
@@ -262,7 +265,7 @@ namespace MesDoigtsDeFees.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Richtings", (string)null);
+                    b.ToTable("Richtings");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -412,7 +415,9 @@ namespace MesDoigtsDeFees.Migrations
 
                     b.HasOne("MesDoigtsDeFees.Models.Richting", "Richting")
                         .WithMany()
-                        .HasForeignKey("RichtingId");
+                        .HasForeignKey("RichtingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Group");
 

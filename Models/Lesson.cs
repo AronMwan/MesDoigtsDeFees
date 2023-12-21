@@ -16,8 +16,8 @@ namespace MesDoigtsDeFees.Models
         [ForeignKey("Group")]
         public int GroupId { get; set; }
         [Display(Name = "Groep")]
-        public Group Group { get; set; }
-        public List<Group>? Groups { get; set; }
+        public Group? Group { get; set; }
+        //public List<Group>? Groups { get; set; }
         //public List<Traject>? Trajects { get; set; }
         [Display(Name = "Les aangemaakt")]
         public DateTime Started { get; set; } = DateTime.Now;
@@ -25,27 +25,30 @@ namespace MesDoigtsDeFees.Models
         public DateTime Ended { get; set; } = DateTime.MaxValue;
 
         [ForeignKey("Richting")]
-        public int RichtingId { get; set; }
+        public int? RichtingId { get; set; }
 
         [Display(Name = "Richting")]
-        public Richting Richting { get; set; } 
-        public string RichtingName { get; set; }
+        public Richting? Richting { get; set; } 
+        public string? RichtingName { get; set; }
+
+
+
     }
 
-    public class LessonIndexViewModel{
-    
+    public class LessonIndexViewModel
+    {
         public List<Lesson> Lessons { get; set; }
         public string SelectedType { get; set; } = "Alle";
-        public SelectList TypeList { get; set; } 
-        
-     
+        public SelectList TypeList { get; set; }
 
+        
         public LessonIndexViewModel()
         {
             TypeList = new SelectList(new List<string> { "Theorie", "Praktijk" });
-
-           
         }
-
     }
+
+
+
+   
 }

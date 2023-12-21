@@ -22,7 +22,10 @@ namespace MesDoigtsDeFees.Controllers
         // GET: LessonRichtings
         public async Task<IActionResult> Index()
         {
-            var mesDoigtsDeFeesContext = _context.LessonRichtings.Include(l => l.Lesson).Include(l => l.Richting);
+            var mesDoigtsDeFeesContext = _context.LessonRichtings
+                .Include(l => l.Lesson)
+                .Include(l => l.Richting)
+                .Where(l => l.Ended == DateTime.MaxValue);
             return View(await mesDoigtsDeFeesContext.ToListAsync());
         }
 

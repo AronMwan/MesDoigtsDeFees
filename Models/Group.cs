@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MesDoigtsDeFees.Models
 {
 
- 
+
     public class Group
     {
         public int Id { get; set; }
@@ -28,13 +28,13 @@ namespace MesDoigtsDeFees.Models
         [DataType(DataType.Date)]
         public DateTime Ended { get; set; } = DateTime.MaxValue;
 
-        
+
     }
 
-    
-     
 
-    
+
+
+
 
 
     public class ListItem

@@ -25,7 +25,9 @@ namespace MesDoigtsDeFees.Controllers
         public async Task<IActionResult> Index()
         {
             return _context.Groups != null ?
-                          View(await _context.Groups.ToListAsync()) :
+                          View(await _context.Groups
+                          .Where(g => g.Ended == DateTime.MaxValue)
+                          .ToListAsync()) :
                           Problem("Entity set 'MesDoigtsDeFeesContext.Group'  is null.");
         }
 

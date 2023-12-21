@@ -236,6 +236,69 @@ public class MyDBContext : IdentityDbContext<MesDoigtsDeFeesUser>
         }
 
 
+        if(!context.Users.Any())
+        {
+            MesDoigtsDeFeesUser user = new MesDoigtsDeFeesUser
+            {
+                Id = "User",
+                UserName = "User",
+                FirstName = "User",
+                LastName = "User",
+                Email = "User@user.com",
+                PasswordHash = "Abc123!"
+
+            };
+
+            context.Users.Add(user);
+            context.SaveChanges();
+
+            MesDoigtsDeFeesUser admin = new MesDoigtsDeFeesUser
+            {
+                Id = "Admin",
+                UserName = "Admin",
+                FirstName = "Admin",
+                LastName = "Admin",
+                Email = "aron.mw12@gmail.com"
+            };
+            var result = await userManager.CreateAsync(admin, "Abc!12345");
+
+        
+
+        }
+
+        MesDoigtsDeFeesUser dummyUser = context.Users.FirstOrDefault(g => g.UserName == "User");
+        MesDoigtsDeFeesUser dummyAdmin = context.Users.FirstOrDefault(g => g.UserName == "Admin");
+
+        if(!context.Roles.Any())
+        {
+            context.Roles.AddRange(
+                new IdentityRole
+                {
+                    Id = "User",
+                    Name = "User",
+                    NormalizedName = "USER"
+                },
+                new IdentityRole
+                {
+                    Id = "SystemAdministrator",
+                    Name = "SystemAdministrator",
+                    NormalizedName = "SYSTEMADMINISTRATOR"
+                });
+      
+            context.UserRoles.Add(
+                new IdentityUserRole<string>
+                {
+                    UserId = dummyUser.Id,
+                    RoleId = "User"
+                });
+            context.UserRoles.Add(
+                 new IdentityUserRole<string>
+                 {
+                     UserId = dummyAdmin.Id,
+                     RoleId = "SystemAdministrator"
+                 });
+            context.SaveChanges();
+        }
     }
 
 
@@ -253,7 +316,9 @@ public class MyDBContext : IdentityDbContext<MesDoigtsDeFeesUser>
 
 
 
-protected override void OnModelCreating(ModelBuilder builder)
+
+
+    protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
         // Customize the ASP.NET Identity model and override the defaults if needed.

@@ -42,6 +42,7 @@ namespace MesDoigtsDeFees.Controllers
             {
                 viewModel.Clothes = await _context.Clothes
                     .OrderBy(g => g.Name)
+                    .Where(c => c.Ended == DateTime.MaxValue)
                     .ToListAsync();
                 return View(viewModel);
             }
@@ -51,7 +52,7 @@ namespace MesDoigtsDeFees.Controllers
                 {
                     SelectedSize = selectedSize,
                     Clothes = await _context.Clothes
-                            .Where(c => selectedSize == "" || c.Size == selectedSize)
+                            .Where(c => selectedSize == "" || c.Size == selectedSize && c.Ended == DateTime.MaxValue)
                             .OrderBy(c => c.Name)
                             .ToListAsync()
                 };
