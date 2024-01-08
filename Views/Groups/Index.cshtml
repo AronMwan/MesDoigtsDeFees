@@ -23,7 +23,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Categorie)
             </th>
-
+            <th>
+                @Html.DisplayName("Docent")
+            </th>
             
             <th></th>
         </tr>
@@ -41,11 +43,16 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Categorie)
           </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Docent.UserName)
+                </td>
+          @if (User.IsInRole("SystemAdministrator")){
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Bijwerken</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Verwijderen</a>
             </td>
+          }
         </tr>
 }
     </tbody>

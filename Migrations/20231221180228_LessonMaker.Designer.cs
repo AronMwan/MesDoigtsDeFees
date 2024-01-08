@@ -4,6 +4,7 @@ using MesDoigtsDeFees.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MesDoigtsDeFees.Migrations
 {
     [DbContext(typeof(MyDBContext))]
-    partial class MesDoigtsDeFeesContextModelSnapshot : ModelSnapshot
+    [Migration("20231221180228_LessonMaker")]
+    partial class LessonMaker
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -123,7 +126,7 @@ namespace MesDoigtsDeFees.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Clothes", (string)null);
+                    b.ToTable("Clothes");
                 });
 
             modelBuilder.Entity("MesDoigtsDeFees.Models.Group", b =>
@@ -154,7 +157,7 @@ namespace MesDoigtsDeFees.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Groups", (string)null);
+                    b.ToTable("Groups");
                 });
 
             modelBuilder.Entity("MesDoigtsDeFees.Models.Lesson", b =>
@@ -172,7 +175,7 @@ namespace MesDoigtsDeFees.Migrations
                     b.Property<DateTime>("Ended")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("GroupId")
+                    b.Property<int>("GroupId")
                         .HasColumnType("int");
 
                     b.Property<string>("LessonMakerId")
@@ -203,7 +206,7 @@ namespace MesDoigtsDeFees.Migrations
 
                     b.HasIndex("RichtingId");
 
-                    b.ToTable("Lessons", (string)null);
+                    b.ToTable("Lessons");
                 });
 
             modelBuilder.Entity("MesDoigtsDeFees.Models.LessonRichting", b =>
@@ -240,39 +243,7 @@ namespace MesDoigtsDeFees.Migrations
 
                     b.HasIndex("RichtingId");
 
-                    b.ToTable("LessonRichtings", (string)null);
-                });
-
-            modelBuilder.Entity("MesDoigtsDeFees.Models.Parameter", b =>
-                {
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Destination")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("LastChanged")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("Obsolete")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Name");
-
-                    b.ToTable("Parameter", (string)null);
+                    b.ToTable("LessonRichtings");
                 });
 
             modelBuilder.Entity("MesDoigtsDeFees.Models.Richting", b =>
@@ -299,7 +270,7 @@ namespace MesDoigtsDeFees.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Richtings", (string)null);
+                    b.ToTable("Richtings");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -443,7 +414,9 @@ namespace MesDoigtsDeFees.Migrations
                 {
                     b.HasOne("MesDoigtsDeFees.Models.Group", "Group")
                         .WithMany()
-                        .HasForeignKey("GroupId");
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("MesDoigtsDeFees.Areas.Identity.Data.MesDoigtsDeFeesUser", "LessonMaker")
                         .WithMany()

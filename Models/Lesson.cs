@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using MesDoigtsDeFees.Areas.Identity.Data;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -12,9 +13,9 @@ namespace MesDoigtsDeFees.Models
         [Display(Name = "Beschrijving")]
         public string Description { get; set; }
         public string Type { get; set; }
-        public List<string> TypeList { get; } = new List<string> { "Theorie", "Praktijk" };
+        public string [] TypeList { get; } =  { "Theorie", "Praktijk" };
         [ForeignKey("Group")]
-        public int GroupId { get; set; }
+        public int? GroupId { get; set; }
         [Display(Name = "Groep")]
         public Group? Group { get; set; }
         //public List<Group>? Groups { get; set; }
@@ -31,6 +32,12 @@ namespace MesDoigtsDeFees.Models
         public Richting? Richting { get; set; } 
         public string? RichtingName { get; set; }
 
+        [ForeignKey("MesDoigtsDeFeesUser")]
+        [Display(Name = "Gemaakt door")]
+        public string LessonMakerId  = Globals.GlobalUser?.Id;
+        [Display(Name = "Gemaakt door")]
+        public MesDoigtsDeFeesUser LessonMaker = Globals.GlobalUser;
+
 
 
     }
@@ -44,7 +51,7 @@ namespace MesDoigtsDeFees.Models
         
         public LessonIndexViewModel()
         {
-            TypeList = new SelectList(new List<string> { "Theorie", "Praktijk" });
+            TypeList = new SelectList(new string [] { "Theorie", "Praktijk" });
         }
     }
 

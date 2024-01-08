@@ -29,6 +29,7 @@
             <th>
                 @Html.DisplayName("Maat")
             </th>
+            
             <th></th>
         </tr>
     </thead>
@@ -45,11 +46,15 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Size)
                 </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Bijwerken</a>
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-                    <a asp-action="Delete" asp-route-id="@item.Id">Verwijderen</a>
-                </td>
+                
+                @if (User.IsInRole("SystemAdministrator"))
+                {
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Bijwerken</a> 
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> 
+                        <a asp-action="Delete" asp-route-id="@item.Id">Verwijderen</a>
+                    </td>
+                }
             </tr>
         }
     </tbody>

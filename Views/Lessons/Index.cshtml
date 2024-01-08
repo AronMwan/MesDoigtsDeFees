@@ -6,12 +6,13 @@
 
 <h1>Lessen</h1>
 
-@if(User.IsInRole("SystemAdministrator"))
+@if (User.IsInRole("SystemAdministrator") || User.IsInRole("Teacher"))
 {
     <p>
         <a asp-action="Create">Maak een nieuwe les aan</a>
     </p>
 }
+
 
 
 <form asp-controller="Lessons" asp-action="Index" method="get">
@@ -37,6 +38,12 @@
             <th>
                 @Html.DisplayName("Groep")
             </th>
+            <th>
+                @if (User.IsInRole("SystemAdministrator") || User.IsInRole("Teacher"))
+                {
+                    @Html.DisplayName("Gemaakt door")
+                }
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -53,7 +60,13 @@
                 @Html.DisplayFor(modelItem => item.Type)
             </td>
              <td>
-                    @Html.DisplayFor(modelItem => item.Group.Name)
+                @Html.DisplayFor(modelItem => item.Group.Name)
+             </td>
+             <td>
+                 @if(User.IsInRole("SystemAdministrator"))
+                 {
+                @Html.DisplayFor(modelItem => item.LessonMaker.UserName)
+                 }
              </td>
             <td>
 

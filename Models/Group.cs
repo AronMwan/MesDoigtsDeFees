@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using MesDoigtsDeFees.Areas.Identity.Data;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -27,6 +28,11 @@ namespace MesDoigtsDeFees.Models
         [Display(Name = "Groep gestopt")]
         [DataType(DataType.Date)]
         public DateTime Ended { get; set; } = DateTime.MaxValue;
+
+        [ForeignKey("MesDoigtsDeFeesUser")]
+        public string UserId { get; set; }
+        [Display(Name = "Docent")]
+        public MesDoigtsDeFeesUser Docent { get; set; }
 
 
     }

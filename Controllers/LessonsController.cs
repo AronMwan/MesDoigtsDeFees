@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MesDoigtsDeFees.Data;
 using MesDoigtsDeFees.Models;
+using MesDoigtsDeFees.Areas.Identity.Data;
+using System.IO;
+using MesDoigtsDeFees.Migrations;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MesDoigtsDeFees.Controllers
 {
@@ -44,19 +48,23 @@ namespace MesDoigtsDeFees.Controllers
                 viewModel.Lessons = await _context.Lessons
                     .OrderBy(l => l.Name)
                     .Include(l => l.Group)
+                    .Include(l => l.LessonMaker)
                     .Where(l => l.Ended == DateTime.MaxValue)
                     .ToListAsync();
                 return View(viewModel);
             }
             else
             {
+                MesDoigtsDeFeesUser user = _context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
                 LessonIndexViewModel viewModel2 = new LessonIndexViewModel
                 {
+                    
                     SelectedType = selectedType,
 
                     Lessons = await _context.Lessons
                         .Where(l => selectedType == "" || l.Type == selectedType)
-                        .Include(l => l.Group)
+                        .Include(l => l.LessonMaker)
+                        .Include(l => l.Group)                        
                         .Where(l => l.Ended == DateTime.MaxValue)
                         .OrderBy(l => l.Name)
                         .ToListAsync()
@@ -69,10 +77,11 @@ namespace MesDoigtsDeFees.Controllers
             
         }
 
-    
 
-    // GET: Lessons/Create
-    public IActionResult Create()
+
+        [Authorize(Roles = "SystemAdministrator, Teacher")]
+        // GET: Lessons/Create
+        public IActionResult Create()
         {
             ViewBag.TypeList = new List<string> { "Theorie", "Praktijk" };
             ViewBag.GroupList = new SelectList(_context.Groups, "Id", "Name");
@@ -81,6 +90,7 @@ namespace MesDoigtsDeFees.Controllers
             return View();
         }
 
+        [Authorize(Roles = "SystemAdministrator, Teacher")]
         // POST: Lessons/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -96,46 +106,48 @@ namespace MesDoigtsDeFees.Controllers
                     ModelState.AddModelError("RichtingId", "Ongeldige RichtingId");
                     return View(lesson);
                 }
+
+                lesson.LessonMakerId = _context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name).Id;
+                lesson.LessonMaker = _context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
                 _context.Add(lesson);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
             // Als er validatiefouten zijn, stel de ViewBag opnieuw in met de juiste waarden
-            ViewBag.TypeList = new List<string> { "Theorie", "Praktijk" };
+            ViewBag.TypeList = new SelectList(new List<string> { "Theorie", "Praktijk" });
             ViewBag.GroupList = new SelectList(_context.Groups, "Id", "Name", lesson.GroupId);
 
             return View(lesson);
         }
 
 
+        [Authorize(Roles = "SystemAdministrator, Teacher")]
         // GET: Lessons/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id == null || _context.Lessons == null)
-            {
-                return NotFound();
-            }
+            var lesson = await _context.Lessons
+                .FirstOrDefaultAsync(m => m.Id == id);
 
-            var lesson = await _context.Lessons.FindAsync(id);
             if (lesson == null)
             {
                 return NotFound();
             }
 
             ViewBag.TypeList = new SelectList(new List<string> { "Theorie", "Praktijk" }, lesson.Type);
-            ViewBag.GroupList = new SelectList(_context.Groups.ToList(), "Id", "GroupName", lesson.GroupId);
+            ViewBag.GroupList = new SelectList(_context.Groups, "Id", "Name", lesson.GroupId);
 
             return View(lesson);
         }
 
 
+        [Authorize(Roles = "SystemAdministrator, Teacher")]
         // POST: Lessons/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,GroupId")] Lesson lesson)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Type,GroupId")] Lesson lesson)
         {
             if (id != lesson.Id)
             {
@@ -162,9 +174,13 @@ namespace MesDoigtsDeFees.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.TypeList = new SelectList(new string [] { "Theorie", "Praktijk" }, lesson.Type);
+            ViewBag.GroupList = new SelectList(_context.Groups.ToList(), "Id", "GroupName", lesson.GroupId);
+
             return View(lesson);
         }
 
+        [Authorize(Roles = "SystemAdministrator, Teacher")]
         // GET: Lessons/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -183,6 +199,7 @@ namespace MesDoigtsDeFees.Controllers
             return View(lesson);
         }
 
+        [Authorize(Roles = "SystemAdministrator, Teacher")]
         // POST: Lessons/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]

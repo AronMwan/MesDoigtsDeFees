@@ -14,9 +14,6 @@ namespace MesDoigtsDeFees.Controllers
         private readonly MyDBContext _context;
         public UsersController(MyDBContext context)
         {
-
-
-
             _context = context;
         }
         public IActionResult Index(string userName, string firstName, string lastName, string email)

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MesDoigtsDeFees.Data;
 using MesDoigtsDeFees.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MesDoigtsDeFees.Controllers
 {
@@ -50,6 +51,7 @@ namespace MesDoigtsDeFees.Controllers
             {
                 ClothesIndexViewModel viewModel2 = new ClothesIndexViewModel
                 {
+
                     SelectedSize = selectedSize,
                     Clothes = await _context.Clothes
                             .Where(c => selectedSize == "" || c.Size == selectedSize && c.Ended == DateTime.MaxValue)
@@ -80,6 +82,7 @@ namespace MesDoigtsDeFees.Controllers
             return View(clothes);
         }
 
+        [Authorize(Roles = "SystemAdministrator")]
         // GET: Clothes/Create
         public IActionResult Create()
         {
@@ -105,6 +108,7 @@ namespace MesDoigtsDeFees.Controllers
         }
 
         // GET: Clothes/Edit/5
+        [Authorize(Roles = "SystemAdministrator")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Clothes == null)
@@ -126,6 +130,7 @@ namespace MesDoigtsDeFees.Controllers
         // POST: Clothes/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "SystemAdministrator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Started,Ended,Size")] Clothes clothes)
@@ -159,6 +164,7 @@ namespace MesDoigtsDeFees.Controllers
         }
 
         // GET: Clothes/Delete/5
+        [Authorize(Roles = "SystemAdministrator")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Clothes == null)
@@ -175,7 +181,7 @@ namespace MesDoigtsDeFees.Controllers
 
             return View(clothes);
         }
-
+        [Authorize(Roles = "SystemAdministrator")]
         // POST: Clothes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
